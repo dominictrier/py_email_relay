@@ -1,7 +1,13 @@
-# Email Relay Client
+# Email Relay Project
 
-## Overview
-This is a Python-based email relay client that fetches emails from one address and forwards them with modified sender and recipient details.
+A flexible Python script for processing and relaying emails with advanced PDF attachment handling.
+
+## Features
+- Email fetching and relaying
+- PDF attachment merging
+- Configurable invoice processing
+- Simulation mode
+- Debug logging
 
 ## Prerequisites
 - Python 3.8+
@@ -10,16 +16,33 @@ This is a Python-based email relay client that fetches emails from one address a
 ## Setup
 1. Clone the repository
 2. Create a virtual environment
-3. Install dependencies:
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+3. Install dependencies
    ```
    pip install -r requirements.txt
    ```
-4. Copy `.env.example` to `.env`
-5. Fill in your email credentials in the `.env` file
+4. Configure `.env` file
+   - Copy `.env.example` to `.env`
+   - Fill in your email configuration
+   - Optionally set `INVOICE_STRING` to prioritize specific PDFs
+
+## Usage
+```bash
+# Normal mode
+python email_relay.py
+
+# Debug mode
+DEBUG_EMAIL_RELAY=true python email_relay.py
+```
 
 ## Configuration
-Modify the `.env` file with your specific email settings:
-- Source email (IMAP/POP3 settings)
+- `SOURCE_EMAIL_*`: Source mailbox credentials
+- `RELAY_EMAIL_*`: SMTP relay configuration
+- `INVOICE_STRING`: Optional prefix to identify invoice PDFs
+- `DEBUG_EMAIL_RELAY`: Enable detailed logging
 - Destination email (SMTP settings)
 - Relay email addresses
 
