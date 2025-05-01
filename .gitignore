@@ -1,0 +1,18 @@
+# Virtual Environment
+venv/
+
+# Environment Files
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Simulation outputs
+email_simulation/
+
+# macOS specific
+.DS_Store
