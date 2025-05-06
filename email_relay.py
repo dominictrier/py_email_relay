@@ -295,6 +295,35 @@ class EmailRelay:
                             pdf_part.add_header('Content-Disposition', f'attachment; filename="{filename}"')
                             msg.attach(pdf_part)
 
+            # Attach non-PDF attachments
+            for part in email_message.walk():
+                debug_log(f"Checking part: Content-Type: {part.get_content_type()}, Maintype: {part.get_content_maintype()}, Subtype: {part.get_content_subtype()}")
+                
+                if part.get_content_maintype() == 'application' and part.get_content_subtype() != 'pdf':
+                    filename = part.get_filename() or 'attachment'
+                    debug_log(f"Found non-PDF attachment: {filename}")
+                    
+                    attachment_content = part.get_payload(decode=True)
+                    
+                    # Determine MIME type based on file extension
+                    file_ext = os.path.splitext(filename)[1].lower()
+                    debug_log(f"File extension: {file_ext}")
+                    
+                    if file_ext in ['.xlsx', '.xls']:
+                        debug_log("Detected Excel file")
+                        attachment_part = MIMEApplication(attachment_content, 'vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                    elif file_ext in ['.docx', '.doc']:
+                        debug_log("Detected Word document")
+                        attachment_part = MIMEApplication(attachment_content, 'msword')
+                    else:
+                        debug_log("Using generic octet-stream")
+                        # Generic application/octet-stream for unknown file types
+                        attachment_part = MIMEApplication(attachment_content, 'octet-stream')
+                    
+                    attachment_part.add_header('Content-Disposition', f'attachment; filename="{filename}"')
+                    msg.attach(attachment_part)
+                    debug_log(f"Attached {filename}")
+
             # Extract email body with fallback to HTML
             body = ''
             body_type = 'plain'
